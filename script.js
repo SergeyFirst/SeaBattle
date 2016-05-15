@@ -11,11 +11,12 @@ function initField(prField,prSyffix){
 	div.className = "fieldLine";
 	prField.appendChild(div);
 
+	var headerString = "АБВГДЕЁЖЗИ";
 	for (var i = 0; i < 10; i++) {
 		var cubeDiv = document.createElement("div");
 			cubeDiv.className = "headerCube";
-			cubeDiv.textContent = i+1;
-			cubeDiv.style = "left: "+(i*30)+"px";
+			cubeDiv.textContent = headerString.charAt(i);
+			cubeDiv.style = "left: "+(i*30+5)+"px";
 
 		div.appendChild(cubeDiv);
 
@@ -23,20 +24,24 @@ function initField(prField,prSyffix){
 
 	for (var i = 0; i < 10; i++) {
 
+		
+
 		var div = document.createElement("div");
 			div.id = prSyffix+"_div_"+i;
 			div.className = "fieldLine";
 
+		//Добавление заголовка для строк 1, 2, 3, ...
 		var cubeDiv = document.createElement("div");
 			cubeDiv.className = "headerCube";
+
 			cubeDiv.textContent = i+1;
-			cubeDiv.style = "top: "+(i*30)+"px";
+			cubeDiv.style = "top: "+((i+1)*30)+"px; left: -30px";
 
 		div.appendChild(cubeDiv);
 
 		prField.appendChild(div);
 
-		//Добавление заголвка для строк 1, 2, 3, ...
+		
 
 		for (var j = 0; j < 10; j++) {
 
