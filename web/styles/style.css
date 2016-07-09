@@ -1,0 +1,109 @@
+#areas {
+	top: 50px;
+	position: relative;
+}
+#left_area {
+	top: 0px;
+	left: 150px;
+}
+#right_area {
+	top: 0px;
+	left: 650px;	
+}
+#left_area_info {
+	top: 100px;
+	left: 10px;
+	position: absolute;
+}
+#right_area_info {
+	top: 100px;
+	left: 1100px;	
+	position: absolute;
+}
+#messages_arrea {
+	margin: 10px auto;
+	width: 400px;
+	height: 30px;
+	top: -20px;
+	left: 220px;
+	font: inherit;
+	font-size: 14px;
+	font-family: Arial;
+	background: #f8f8f8;
+	padding: .5em;
+	overflow: hidden;
+	position: relative;
+}
+#start_button {
+
+}
+#left_buttons_area {
+	margin: 30px;
+	padding: 30px;
+	width: 200px;
+	height: 80px;
+}
+#right_buttons_area {
+	margin: 30px;
+	padding: 30px;
+	width: 200px;
+	height: 80px;
+	left: 20px;
+	top: -300px;
+	position: relative;
+	background-color: white;
+}
+.area {
+	width: 410px;
+	height: 410px;
+	margin: 0px;
+	border: 0px;
+	padding: 0px;	
+	position: absolute;
+}
+#left_area_table > thead > tr > td, 
+#left_area_table > tbody > tr > td,
+#right_area_table > thead > tr > td, 
+#right_area_table > tbody > tr > td {
+	width: 35px;
+	height: 35px;
+	text-align: center;	
+	font-family: Arial;
+	font-size: 12px;
+	padding: 0px;
+	margin: 0px;
+}
+.ship {
+	background: url("../img/ship.png") no-repeat center center !important;
+}
+#left_area_table > tbody > tr > td:not(:nth-child(1)),
+#right_area_table > tbody > tr > td:not(:nth-child(1)) {
+	background: url("../img/light_cube.png") repeat center;
+}
+
+#left_area_table > tbody > tr > td:not(:nth-child(1)):hover,
+#right_area_table > tbody > tr > td:not(:nth-child(1)):hover {
+	background: url("../img/dark_cube.png") repeat center;
+}
+
+#left_area_table > thead > tr > td > p, 
+#left_area_table > tbody > tr > td > p,
+#right_area_table > thead > tr > td > p, 
+#right_area_table > tbody > tr > td > p {	
+	padding: 0px;
+	margin: 0px;
+}
+
+
+
+h1 {
+	margin: 0 auto;
+	width: 900px;
+	height: 30px;
+	top: 10px;
+	position: relative;
+	font-family: Arial;
+}
+div {
+	display: block;
+}
