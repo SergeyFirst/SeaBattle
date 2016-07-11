@@ -1,0 +1,5 @@
+app\Player.class
+servlets\Index.class
+servlets\Start.class
+app\Game.class
+servlets\Hit.class
