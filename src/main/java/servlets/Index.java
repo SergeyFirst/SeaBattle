@@ -24,7 +24,6 @@ public class Index extends HttpServlet {
     }
 
     private void process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         HttpSession session = request.getSession();
         if (session.getAttribute("Player") == null) {
             session.setAttribute("Player", game.registerNewPlayer());

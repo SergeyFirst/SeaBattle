@@ -1,5 +1,7 @@
 /*--------------------- MODEL - BEGIN ---------------------------------------------------------*/
 var model = {
+    i: 0,
+    enemyID: "",
     leftField: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -90,8 +92,6 @@ var model = {
      */
     checkShip: function (x, y, r, length, prField) {
 
-        var result = true;
-
         //Проверим, что карабль влезает на поле
         if ((r == 0) && (x + length > 10)) return false;
         if ((r == 1) && (y + length > 10)) return false;
@@ -166,6 +166,22 @@ var view = {
      */
     showMessage: function (message) {
         document.getElementById("messages_arrea").textContent = message;
+    },
+    redrawField: function (field, prefix) {
+        for (i = 0; i < 10; i++) {
+            for (j = 0; j < 10; j++) {
+                if (field[i][j] == 0) {
+                    document.getElementById(prefix + i + j).className = "";
+                } else if (field[i][j] == 1) {
+                    document.getElementById(prefix + i + j).className = "ship";
+                } else if (field[i][j] == 2) {
+                    document.getElementById(prefix + i + j).className = "fire";
+                } else if (field[i][j] == 3) {
+                    document.getElementById(prefix + i + j).className = "past";
+                }
+
+            }
+        }
     }
 
 
@@ -179,11 +195,87 @@ var controller = {
     leftFieldClick: function () {
         console.log("left");
     },
-
+    /**
+     * Обработчик события при клике по правому полю
+     */
     rightFieldClick: function () {
 
+        //Разберём id ячейки
+        var x = +this.id.substr(1, 1);
+        var y = +this.id.substr(2, 1);
+        var request = {
+            x: x,
+            y: y,
+            enemyID: model.enemyID
+        };
+        var xhrShoot = new XMLHttpRequest();
+        xhrShoot.open('POST', '/shoot?request=' + JSON.stringify(request), true);
+        xhrShoot.setRequestHeader('Content-Type', 'application/json');
+        xhrShoot.send();
+
+        xhrShoot.onreadystatechange = function () {
+            if (xhrShoot.readyState != 4) return;
+
+            if (xhrShoot.status != 200) {
+                alert(xhrShoot.status + ': ' + xhrShoot.statusText);
+            } else {
+                //Обработаем выстрел по вражескому полю
+                var hit = JSON.parse(xhrShoot.responseText).hit;
+                if (hit) {
+                    model.rightField[x][y] = 2; //Попал
+                } else {
+                    model.rightField[x][y] = 3; //Мимо
+                }
+                view.redrawField(model.rightField, "r");
+            }
+        }
+
+        var xhrGetFire = new XMLHttpRequest();
+        xhrGetFire.open('POST', '/getFire?id=' + JSON.stringify(request), true);
+        xhrGetFire.setRequestHeader('Content-Type', 'application/json');
+        xhrGetFire.send();
+
+        xhrGetFire.onreadystatechange = function () {
+            if (xhrGetFire.readyState != 4) return;
+
+            if (xhrGetFire.status != 200) {
+                //alert(xhrGetFire.status + ': ' + xhrGetFire.statusText);
+                xhrGetFire.open('POST', '/getFire?id=' + JSON.stringify(request), true);
+                xhrGetFire.setRequestHeader('Content-Type', 'application/json');
+                xhrGetFire.send();
+            } else {
+
+                //Обработаем выстрел по нашему полю
+                var jsonData = JSON.parse(xhrGetFire.responseText);
+                model.i++;
+                view.showMessage("" + model.i + ":" + xhrGetFire.responseText);
+                var x = jsonData.x;
+                var y = jsonData.y;
+                var hit = jsonData.hit;
+                if (hit) {
+                    model.leftField[x][y] = 2; //Попал
+                } else {
+                    model.leftField[x][y] = 3; //Мимо
+                }
+                view.redrawField(model.leftField, "");
+            }
+
+
+        }
+    },
+    /**
+     * Обработчик события при начале игры
+     */
+    startClick: function () {
+
+        if (event.target != this) return;
+
+        request = {
+          playField: model.leftField
+        };
+
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/hit?id='+this.id, true);
+        xhr.open('POST', '/start?request=' + JSON.stringify(request), true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send();
 
@@ -193,38 +285,39 @@ var controller = {
             if (xhr.status != 200) {
                 alert(xhr.status + ': ' + xhr.statusText);
             } else {
-                view.startGame();
-            }
-
-        }
-
-
-    },
-
-    start: function () {
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/start', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send();
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState != 4) return;
-
-            if (xhr.status != 200) {
-                alert(xhr.status + ': ' + xhr.statusText);
-            } else {
+                model.enemyID = JSON.parse(xhr.responseText).enemyID;
                 view.startGame();
             }
 
         }
 
     },
-    placeShips: function () {
+    placeShipsClick: function () {
         model.clearField(model.leftField);
         model.fillField(model.leftField);
         view.initArea("");
+    },
+    /**
+     eventSource: new EventSource("/getFire"),
+     onMessage: function (event) {
+
+        //Обработаем выстрел по нашему полю
+        var jsonData = JSON.parse(event.data);
+        model.i++;
+        view.showMessage("" + model.i + ":" + event.data);
+        var x = jsonData.x;
+        var y = jsonData.y;
+        var hit = jsonData.hit;
+        if (hit) {
+            model.leftField[x][y] = 2; //Попал
+        } else {
+            model.leftField[x][y] = 3; //Мимо
+        }
+        view.redrawField(model.leftField, "");
+        //eventSource.close();
+
     }
+     */
 
 };
 
@@ -238,6 +331,7 @@ var controller = {
         init: function () {
             model.fillField(model.leftField);
             view.initArea("");
+            //controller.eventSource.addEventListener('message',controller.onMessage,false);
             //view.fillField(document.getElementById("leftField"), model.leftField,"left");
             //view.fillField(document.getElementById("rightField"),model.rightField,"right");
         },
@@ -256,8 +350,8 @@ var controller = {
                     document.getElementById("r" + i + j).onclick = controller.rightFieldClick;
                 }
             }
-            document.getElementById("start_button").onclick = controller.start;
-            document.getElementById("place_ships").onclick = controller.placeShips;
+            document.getElementById("start_button").onclick = controller.startClick;
+            document.getElementById("place_ships").onclick = controller.placeShipsClick;
         }
 
     }

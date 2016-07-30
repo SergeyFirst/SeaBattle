@@ -12,8 +12,8 @@
         <servlet-class>servlets.Start</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Hit</servlet-name>
-        <servlet-class>servlets.Hit</servlet-class>
+        <servlet-name>Shoot</servlet-name>
+        <servlet-class>servlets.Shoot</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -25,7 +25,7 @@
         <url-pattern>/start</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Hit</servlet-name>
-        <url-pattern>/hit</url-pattern>
+        <servlet-name>shoot</servlet-name>
+        <url-pattern>/shoot</url-pattern>
     </servlet-mapping>
 </web-app>

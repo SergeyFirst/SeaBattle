@@ -1,5 +1,8 @@
+servlets\Shoot.class
+app\Enemy.class
+app\Bot.class
 app\Player.class
+app\SeaBattle.class
 servlets\Index.class
 servlets\Start.class
 app\Game.class
-servlets\Hit.class

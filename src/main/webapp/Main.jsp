@@ -416,6 +416,7 @@
 
   </div>
 
+  <script src='js/eventsource.min.js'></script>
   <script src='js/script.js'></script>
 
   </div>

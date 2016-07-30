@@ -76,15 +76,23 @@
 .ship {
 	background: url("../img/ship.png") no-repeat center center !important;
 }
+.fire {
+	background: url("../img/fire.png") no-repeat center center !important;
+}
+.past {
+	background: url("../img/past.png") no-repeat center center !important;
+}
+
 #left_area_table > tbody > tr > td:not(:nth-child(1)),
 #right_area_table > tbody > tr > td:not(:nth-child(1)) {
 	background: url("../img/light_cube.png") repeat center;
 }
 
-#left_area_table > tbody > tr > td:not(:nth-child(1)):hover,
+
 #right_area_table > tbody > tr > td:not(:nth-child(1)):hover {
 	background: url("../img/dark_cube.png") repeat center;
 }
+
 
 #left_area_table > thead > tr > td > p, 
 #left_area_table > tbody > tr > td > p,

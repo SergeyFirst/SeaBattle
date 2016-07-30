@@ -1,5 +1,6 @@
 /*--------------------- MODEL - BEGIN ---------------------------------------------------------*/
 var model = {
+    enemyID : "",
     leftField: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -179,11 +180,21 @@ var controller = {
     leftFieldClick: function () {
         console.log("left");
     },
-
+    /**
+     * Обработчик события при клике по правому полю
+     */
     rightFieldClick: function () {
 
+        //Разберём id ячейки
+        var x = +this.id.substr(1,1);
+        var y = +this.id.substr(2,1);
+        var request = {
+            x: x,
+            y: y,
+            enemyID: model.enemyID
+        };
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/hit?id='+this.id, true);
+        xhr.open('POST', '/shoot?id=' + JSON.stringify(request), true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send();
 
@@ -193,15 +204,20 @@ var controller = {
             if (xhr.status != 200) {
                 alert(xhr.status + ': ' + xhr.statusText);
             } else {
-                view.startGame();
+                //view.startGame();
+                hit = JSON.parse(xhr.responseText).hit;
+                if (hit) {
+                    alert("Попал!!!")
+                }
             }
-
         }
-
-
     },
+    /**
+     * Обработчик события при начале игры
+     */
+    startClick: function () {
 
-    start: function () {
+        if (event.target != this) return;
 
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/start', true);
@@ -214,13 +230,14 @@ var controller = {
             if (xhr.status != 200) {
                 alert(xhr.status + ': ' + xhr.statusText);
             } else {
+                model.enemyID = JSON.parse(xhr.responseText).enemyID;
                 view.startGame();
             }
 
         }
 
     },
-    placeShips: function () {
+    placeShipsClick: function () {
         model.clearField(model.leftField);
         model.fillField(model.leftField);
         view.initArea("");
@@ -256,8 +273,8 @@ var controller = {
                     document.getElementById("r" + i + j).onclick = controller.rightFieldClick;
                 }
             }
-            document.getElementById("start_button").onclick = controller.start;
-            document.getElementById("place_ships").onclick = controller.placeShips;
+            document.getElementById("start_button").onclick = controller.startClick;
+            document.getElementById("place_ships").onclick = controller.placeShipsClick;
         }
 
     }

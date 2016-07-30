@@ -7,16 +7,26 @@ import java.util.ArrayList;
  */
 public class Game {
 
-    private static ArrayList<Player> Players = new ArrayList<>();
+    private static ArrayList<Enemy> players = new ArrayList<>();
 
-    public Player registerNewPlayer() {
+    public static Player registerNewPlayer() {
         Player newPlayer = new Player();
-        Game.Players.add(newPlayer);
+        players.add(newPlayer);
         return newPlayer;
     }
 
-    public int getPlayerCount() {
-        return Players.size();
+    public static int getPlayerCount() {
+        return players.size();
+    }
+
+    public static Enemy findNewEnemy(Enemy me) {
+        for (Enemy player : players) {
+            if (player != me && player.getEnemy()==null && player.isReadyToFight()) {
+                return player;
+            }
+        }
+        //Если свободный игрок не найден, то вернём Бота
+        return new Bot();
     }
 
 

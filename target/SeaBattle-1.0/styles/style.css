@@ -81,7 +81,7 @@
 	background: url("../img/light_cube.png") repeat center;
 }
 
-#left_area_table > tbody > tr > td:not(:nth-child(1)):hover,
+
 #right_area_table > tbody > tr > td:not(:nth-child(1)):hover {
 	background: url("../img/dark_cube.png") repeat center;
 }
